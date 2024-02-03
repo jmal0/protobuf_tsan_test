@@ -1,6 +1,7 @@
 FROM fedora:40 as base
 RUN dnf install -y \
     cmake-3.27.7 \
+    clang-17.0.6 \
     gcc-14.0.1 \
     gcc-c++-14.0.1 \
     libtsan \
@@ -12,7 +13,9 @@ RUN dnf install -y \
     yum clean all -y
 
 # Only way around the error - build with fsanitize=thread
-ARG CMAKE_FLAGS="-G Ninja -DBUILD_TESTING=OFF -DCMAKE_CXX_FLAGS=-fsanitize=thread"
+#ARG CMAKE_FLAGS="-G Ninja -DBUILD_TESTING=OFF -DCMAKE_CXX_FLAGS=-fsanitize=thread"
+# Or build with clang??
+ARG CMAKE_FLAGS="-G Ninja -DBUILD_TESTING=OFF -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++"
 # Issue present when building with these flags:
 #ARG CMAKE_FLAGS="-G Ninja -DBUILD_TESTING=OFF"
 #ARG CMAKE_FLAGS="-G Ninja -DBUILD_TESTING=OFF -DCMAKE_MODULE_LINKER_FLAGS=-fuse-ld=mold -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=mold -DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=mold"
